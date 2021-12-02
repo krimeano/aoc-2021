@@ -1,54 +1,78 @@
-pub mod day_2 {
-    struct Ort(i32, i32);
+struct Ort(i32, i32);
 
-    struct Movement(Ort, i32);
+struct Movement(Ort, i32);
 
-    struct Position(i32, i32);
 
-    pub fn solve_2_1(raw_input: &Vec<String>, verbose: bool) -> i32 {
-        let input = preprocess(&raw_input);
-        let mut position = Position(0, 0);
-        for x in input {
-            if verbose {
-                println!("direction = ({}, {}), value = {}", x.0.0, x.0.1, x.1)
-            }
-            position.0 += x.0.0 * x.1;
-            position.1 += x.0.1 * x.1;
+pub fn solve_2_1(raw_input: &Vec<String>, verbose: bool) -> i32 {
+    let mut x = 0;
+    let mut y = 0;
+
+    for line in raw_input {
+        let Movement(direction, distance) = parse_line(line);
+        x += direction.0 * distance;
+        y += direction.1 * distance;
+
+        if verbose {
+            println!("direction = ({}, {}), distance = {}, position = {}, {}", direction.0, direction.1, distance, x, y);
+        }
+    }
+
+    x * y
+}
+
+pub fn solve_2_2(raw_input: &Vec<String>, verbose: bool) -> i32 {
+    let mut aim_depth = 0;
+    let mut x = 0;
+
+    let mut y = 0;
+    for line in raw_input {
+        let Movement(direction, distance) = parse_line(line);
+        if verbose {
+            println!("direction = ({}, {}), value = {}", direction.0, direction.1, distance)
+        }
+        if direction.0 != 0 {
+            x += direction.0 * distance;
+            y += direction.0 * distance * aim_depth;
+        } else if direction.1 != 0 {
+            aim_depth += direction.1 * distance;
         }
 
-        position.0 * position.1
+        if verbose {
+            println!("direction = ({}, {}), value = {}, aim = {}, position = {}, {}", direction.0, direction.1, distance, aim_depth, x, y);
+        }
     }
-
-    fn preprocess(raw_input: &Vec<String>) -> Vec<Movement> {
-        raw_input.iter()
-            .map(|x| parse_line(String::from(x)))
-            .collect()
-    }
-
-    fn parse_line(line: String) -> Movement {
-        let parts: Vec<String> = line.split(" ")
-            .map(|x| String::from(x))
-            .collect();
-
-        Movement(
-            match &parts[0] as &str {
-                "forward" => Ort(1, 0),
-                "down" => Ort(0, 1),
-                "up" => Ort(0, -1),
-                _ => panic!("unexpected input: {}", line)
-            },
-            parts[1].parse().unwrap())
-    }
+    x * y
 }
+
+fn parse_line(line: &String) -> Movement {
+    let parts: Vec<String> = line.split(" ")
+        .map(|x| String::from(x))
+        .collect();
+
+    Movement(
+        match &parts[0] as &str {
+            "forward" => Ort(1, 0),
+            "down" => Ort(0, 1),
+            "up" => Ort(0, -1),
+            _ => panic!("unexpected input: {}", line)
+        },
+        parts[1].parse().unwrap())
+}
+
 
 #[cfg(test)]
 mod tests {
-    use crate::{make_file_name, read_input};
-    use crate::day_02::day_2::solve_2_1;
+    use crate::{make_file_name, read_input, solve_2_1, solve_2_2};
 
     #[test]
     fn day_2_1() {
         let test_data = read_input(make_file_name(true, 2, 1));
         assert_eq!(solve_2_1(&test_data, true), 150);
+    }
+
+    #[test]
+    fn day_2_2() {
+        let test_data = read_input(make_file_name(true, 2, 1));
+        assert_eq!(solve_2_2(&test_data, true), 900);
     }
 }
