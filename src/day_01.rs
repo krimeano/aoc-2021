@@ -57,10 +57,15 @@ pub mod day_1 {
 mod tests {
     use crate::{make_file_name, read_input, solve_1_1, solve_1_2};
 
-    #[test]
-    fn day_1() {
-        let test_data = read_input(make_file_name(true, 1, 1));
-        assert_eq!(solve_1_1(&test_data, true), 7);
-        assert_eq!(solve_1_2(&test_data, true), 5);
-    }
+        #[test]
+        fn day_1_1() {
+            let test_data = read_input(make_file_name(true, 1, 1));
+            assert_eq!(solve_1_1(&test_data, true), 7);
+        }
+
+        #[test]
+        fn day_1_2() {
+            let test_data = read_input(make_file_name(true, 1, 1));
+            assert_eq!(solve_1_2(&test_data, true), 5);
+        }
 }

@@ -17,7 +17,7 @@ pub mod aoc_lib {
 
         contents.split("\n")
             .filter(|x| !x.is_empty())
-            .map(|x| String::from(x))
+            .map(|x| String::from(x.trim()))
             .collect()
     }
 
