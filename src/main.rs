@@ -69,27 +69,45 @@ fn main() {
 
 fn solve_1_1(input_data: Vec<i32>, verbose: bool) -> i32 {
     // println!("Input data: {}", input_data)
-    let mut last_ix = 0;
+    let mut stored_last_x = None;
     let mut increased = 0;
     input_data
         .iter()
         .for_each(|x| {
-            if x > &last_ix {
-                increased += if last_ix > 0 { 1 } else { 0 };
-                if verbose {
-                    println!("{}, {}, increased {} times", &last_ix, &x, increased);
+            let mut has_increased = 0;
+            match stored_last_x {
+                Some(last_x) => {
+                    has_increased = if x > last_x { 1 } else { 0 };
+                    if verbose {
+                        if x > &last_x {
+                            println!("{}, {}, INCREASED", &last_x, x);
+                        } else if x < &last_x {
+                            println!("{}, {}, decreased", &last_x, x);
+                        } else {
+                            println!("{}, {}, no change", &last_x, x);
+                        }
+                    }
                 }
-            } else {
-                if verbose {
-                    println!("{}, {}, decreased", &last_ix, &x);
-                }
+                None => if verbose { println!("N/A, {}, first value", x) }
             }
-            last_ix = *x;
+
+            increased += has_increased;
+            stored_last_x = Some(x);
         });
     increased
 }
 
 
-fn solve_1_2(_input_data: Vec<i32>, _verbose: bool) -> i32 {
-    0
+fn solve_1_2(input_data: Vec<i32>, verbose: bool) -> i32 {
+    let mut windows = Vec::new();
+    let size = 3;
+    // let mut stored_last_x = None;
+    for i in 0..input_data.len() - size + 1 {
+        let mut x = 0;
+        for j in 0..size {
+            x += &input_data[i + j];
+        }
+        windows.push(x);
+    }
+    return solve_1_1(windows, verbose);
 }
