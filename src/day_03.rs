@@ -72,10 +72,19 @@ fn gas_generator_rating(sorted_data: &Vec<i32>, base: i32, cap: i32, is_oxygen: 
             }
             let doubled_cut = 2 * &cut;
             // println!("gas_generator_rating {}, {}, {}, {}, {:?}", &half, &size, &cut, &is_oxygen, &sorted_data);
-
-            match &is_oxygen ^ (&doubled_cut > &size) {
-                true => gas_generator_rating(&sorted_data[..cut].to_vec(), base, half_cap, is_oxygen),
-                false => gas_generator_rating(&sorted_data[cut..].to_vec(), half, half_cap, is_oxygen)
+            match &is_oxygen {
+                true => if &doubled_cut > &size {
+                    gas_generator_rating(&sorted_data[..*&cut].to_vec(), base, half_cap, is_oxygen)
+                } else {
+                    gas_generator_rating(&sorted_data[*&cut..].to_vec(), half, half_cap, is_oxygen)
+                }
+                false => {
+                    if &doubled_cut > &size {
+                        gas_generator_rating(&sorted_data[*&cut..].to_vec(), half, half_cap, is_oxygen)
+                    } else {
+                        gas_generator_rating(&sorted_data[..*&cut].to_vec(), base, half_cap, is_oxygen)
+                    }
+                }
             }
         }
     }

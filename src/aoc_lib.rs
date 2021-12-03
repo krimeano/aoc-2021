@@ -35,14 +35,7 @@ pub fn bin_str_to_number(bin: &str) -> i32 {
     assert!(re.is_match(bin));
 
     let mut out = 0;
-    for x in bin.chars() {
-        out = out << 1;
-        match x {
-            '1' => { out += 1 }
-            '0' => {}
-            _ => { panic!("unknown character: \"{}\"", x) }
-        };
-    }
+    for x in bin.chars() { out = (out << 1) + if x == '1' { 1 } else { 0 }; }
     out
 }
 
