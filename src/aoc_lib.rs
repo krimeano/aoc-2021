@@ -10,7 +10,7 @@ pub fn make_file_name(is_probe: bool, day: u8, variant: u8) -> String {
 }
 
 pub fn read_input(filename: String) -> Vec<String> {
-    println!("read file: {}", filename);
+    // println!("read file: {}", filename);
     let contents = fs::read_to_string(filename)
         .expect("Something went wrong reading the file");
 

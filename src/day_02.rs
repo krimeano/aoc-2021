@@ -67,12 +67,12 @@ mod tests {
     #[test]
     fn day_2_1() {
         let test_data = read_input(make_file_name(true, 2, 1));
-        assert_eq!(solve_2_1(&test_data, true), 150);
+        assert_eq!(solve_2_1(&test_data, false), 150);
     }
 
     #[test]
     fn day_2_2() {
         let test_data = read_input(make_file_name(true, 2, 1));
-        assert_eq!(solve_2_2(&test_data, true), 900);
+        assert_eq!(solve_2_2(&test_data, false), 900);
     }
 }
