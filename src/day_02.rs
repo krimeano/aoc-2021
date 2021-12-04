@@ -8,6 +8,10 @@ pub fn solve_2_1(raw_input: &Vec<String>, verbose: bool) -> i32 {
     let mut y = 0;
 
     for line in raw_input {
+        if line.len() == 0 {
+            continue;
+        }
+
         let Movement(direction, distance) = parse_line(line);
         x += direction.0 * distance;
         y += direction.1 * distance;
@@ -26,6 +30,9 @@ pub fn solve_2_2(raw_input: &Vec<String>, verbose: bool) -> i32 {
 
     let mut y = 0;
     for line in raw_input {
+        if line.len() == 0 {
+            continue;
+        }
         let Movement(direction, distance) = parse_line(line);
         if verbose {
             println!("direction = ({}, {}), value = {}", direction.0, direction.1, distance)

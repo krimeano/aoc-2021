@@ -42,6 +42,9 @@ pub fn solve_3_2(raw_input: &[String]) -> u32 {
     let mut input = Vec::new();
 
     for line in raw_input {
+        if line.len() == 0 {
+            continue;
+        }
         let x = bin_str_to_number(line);
         input.push(x);
     }
