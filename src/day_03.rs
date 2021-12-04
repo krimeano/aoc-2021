@@ -1,6 +1,6 @@
 use crate::aoc_lib::bin_str_to_number;
 
-pub fn solve_3_1(raw_input: &Vec<String>) -> i32 {
+pub fn solve_3_1(raw_input: &[String]) -> i32 {
     let total = raw_input.len();
 
     if total == 0 {
@@ -32,7 +32,7 @@ pub fn solve_3_1(raw_input: &Vec<String>) -> i32 {
     gamma * epsilon
 }
 
-pub fn solve_3_2(raw_input: &Vec<String>) -> i32 {
+pub fn solve_3_2(raw_input: &[String]) -> i32 {
     let total = raw_input.len();
 
     if total == 0 {
@@ -61,7 +61,7 @@ fn gas_generator_rating(sorted_data: &Vec<i32>, base: i32, cap: i32, is_oxygen: 
         2 => sorted_data[if is_oxygen { 1 } else { 0 }],
         _ => {
             let size = sorted_data.len();
-            let half_cap = if cap > 0 { cap } else { define_cap(sorted_data[&size - 1]) } >> 1;
+            let half_cap = if cap > 0 { cap } else { define_cap(sorted_data[size - 1]) } >> 1;
             let half = base + half_cap;
             let mut cut = 0;
             for ix in 0..size {
@@ -70,21 +70,12 @@ fn gas_generator_rating(sorted_data: &Vec<i32>, base: i32, cap: i32, is_oxygen: 
                     break;
                 }
             }
-            let doubled_cut = 2 * &cut;
+            let doubled_cut = 2 * cut;
             // println!("gas_generator_rating {}, {}, {}, {}, {:?}", &half, &size, &cut, &is_oxygen, &sorted_data);
-            match &is_oxygen {
-                true => if &doubled_cut > &size {
-                    gas_generator_rating(&sorted_data[..*&cut].to_vec(), base, half_cap, is_oxygen)
-                } else {
-                    gas_generator_rating(&sorted_data[*&cut..].to_vec(), half, half_cap, is_oxygen)
-                }
-                false => {
-                    if &doubled_cut > &size {
-                        gas_generator_rating(&sorted_data[*&cut..].to_vec(), half, half_cap, is_oxygen)
-                    } else {
-                        gas_generator_rating(&sorted_data[..*&cut].to_vec(), base, half_cap, is_oxygen)
-                    }
-                }
+            if is_oxygen ^ (doubled_cut > size) {
+                gas_generator_rating(&sorted_data[cut..].to_vec(), half, half_cap, is_oxygen)
+            } else {
+                gas_generator_rating(&sorted_data[..cut].to_vec(), base, half_cap, is_oxygen)
             }
         }
     }
@@ -101,7 +92,8 @@ fn define_cap(number: i32) -> i32 {
 #[cfg(test)]
 mod tests {
     use crate::{make_file_name, read_input, solve_3_1, solve_3_2};
-    use crate::day_03::{define_cap, gas_generator_rating};
+
+    use super::*;
 
     #[test]
     fn cap() {
