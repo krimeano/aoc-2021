@@ -1,4 +1,4 @@
-use crate::aoc_lib::bin_str_to_number;
+use crate::aoc_lib::{bin_str_to_number, find_not_less_than};
 
 pub fn solve_3_1(raw_input: &[String]) -> i32 {
     let total = raw_input.len();
@@ -42,7 +42,7 @@ pub fn solve_3_2(raw_input: &[String]) -> u32 {
     let mut input = Vec::new();
 
     for line in raw_input {
-        let x = bin_str_to_number(&line);
+        let x = bin_str_to_number(line);
         input.push(x);
     }
     input.sort();
@@ -63,13 +63,7 @@ fn gas_generator_rating(sorted_data: &[u32], base: u32, cap: u32, is_oxygen: boo
             let size = sorted_data.len();
             let half_cap = if cap > 0 { cap } else { define_cap(sorted_data[size - 1]) } >> 1;
             let half = base + half_cap;
-            let mut cut = 0;
-            for ix in 0..size {
-                if sorted_data[ix] >= half {
-                    cut = ix;
-                    break;
-                }
-            }
+            let cut = find_not_less_than(sorted_data, half);
             let doubled_cut = 2 * cut;
             // println!("gas_generator_rating {}, {}, {}, {}, {:?}", &half, &size, &cut, &is_oxygen, &sorted_data);
             if is_oxygen ^ (doubled_cut > size) {
