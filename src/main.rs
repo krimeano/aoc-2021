@@ -12,7 +12,7 @@ mod day_04;
 
 
 fn main() {
-    let day = 3;
+    let day = 4;
     match day {
         1 => {
             let raw_input = read_input(make_file_name(false, day, 1));
