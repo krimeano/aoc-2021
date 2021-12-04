@@ -32,7 +32,7 @@ pub fn solve_3_1(raw_input: &[String]) -> i32 {
     gamma * epsilon
 }
 
-pub fn solve_3_2(raw_input: &[String]) -> i32 {
+pub fn solve_3_2(raw_input: &[String]) -> u32 {
     let total = raw_input.len();
 
     if total == 0 {
@@ -54,7 +54,7 @@ pub fn solve_3_2(raw_input: &[String]) -> i32 {
     oxy * co2
 }
 
-fn gas_generator_rating(sorted_data: &Vec<i32>, base: i32, cap: i32, is_oxygen: bool) -> i32 {
+fn gas_generator_rating(sorted_data: &[u32], base: u32, cap: u32, is_oxygen: bool) -> u32 {
     match sorted_data.len() {
         0 => 0,
         1 => sorted_data[0],
@@ -81,7 +81,7 @@ fn gas_generator_rating(sorted_data: &Vec<i32>, base: i32, cap: i32, is_oxygen: 
     }
 }
 
-fn define_cap(number: i32) -> i32 {
+fn define_cap(number: u32) -> u32 {
     let mut cap = 1;
     while cap < number {
         cap = cap << 1;

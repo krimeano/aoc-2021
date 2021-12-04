@@ -1,7 +1,5 @@
 use std::fs;
 
-use regex::Regex;
-
 pub fn make_file_name(is_probe: bool, day: u8, variant: u8) -> String {
     format!(
         "input/{p}day_{d}_{v}.txt",
@@ -29,13 +27,29 @@ pub fn input_to_numbers(vec: &Vec<String>) -> Vec<i32> {
 }
 
 
-pub fn bin_str_to_number(bin: &str) -> i32 {
-    let re = Regex::new(r"^[01]{1,32}$").unwrap();
-
-    assert!(re.is_match(bin));
-
+pub fn bin_str_to_number(bin: &str) -> u32 {
+    if bin.len() == 0 {
+        panic!("empty string!");
+    }
+    const MAX_SIZE: u8 = 32;
     let mut out = 0;
-    for x in bin.chars() { out = (out << 1) + if x == '1' { 1 } else { 0 }; }
+    let mut counter = 0;
+
+    for x in bin.chars() {
+        counter += 1;
+
+        if counter > MAX_SIZE {
+            panic!("too large string!");
+        }
+
+        out = out << 1;
+
+        match x {
+            '1' => out = out | 1,
+            '0' => {}
+            _ => panic!("expected 0 or 1, received {}", x)
+        }
+    }
     out
 }
 
