@@ -1,7 +1,5 @@
 use std::collections::HashMap;
 
-use crate::day_04::ReaderState::Card;
-
 const BINGO_SIZE: usize = 5;
 
 #[derive(Debug)]
@@ -13,6 +11,7 @@ enum ReaderState {
 struct BingoCard {
     rows: Vec<BingoLine>,
     cols: Vec<BingoLine>,
+    won: bool,
 }
 
 impl BingoCard {
@@ -41,6 +40,7 @@ impl BingoCard {
         BingoCard {
             rows,
             cols,
+            won: false,
         }
     }
 
@@ -59,6 +59,7 @@ impl BingoCard {
             }
         }
 
+        self.won = won;
         won
     }
 
@@ -138,31 +139,28 @@ pub fn solve_4_2(raw_input: &[String]) -> u32 {
     let (barrels, mut cards) = read_bingo_game(raw_input);
 
     let mut called_barrels: HashMap<u32, bool> = HashMap::new();
-    let mut cards_in_game = Vec::new();
-    for card in &mut cards {
-        cards_in_game.push(card)
-    }
     for barrel in barrels {
         assert!(!called_barrels.contains_key(&barrel));
-        println!("BARREL: {}", barrel);
+        // println!("BARREL: {}", barrel);
         called_barrels.insert(barrel, true);
-
-        let mut losers = Vec::new();
-
-        for card in cards_in_game {
-            if !card.verify_number(barrel) {
-                losers.push(card);
-            }
+        for card in &mut cards {
+            card.verify_number(barrel);
         }
-        println!("{} cards left", losers.len());
 
-        if losers.len() == 0 && cards_in_game.len() == 1 {
-            let total = cards_in_game[0].sum_unmarked();
+        if cards.len() == 1 && cards[0].won {
+            let total = cards[0].sum_unmarked();
             return total * barrel;
         }
 
-        cards_in_game = losers;
-    };
+        let mut losers = Vec::new();
+
+        for card in cards {
+            if !card.won {
+                losers.push(card);
+            }
+        }
+        cards = losers;
+    }
     0
 }
 
