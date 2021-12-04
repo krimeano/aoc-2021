@@ -2,7 +2,7 @@ use crate::aoc_lib::{make_file_name, read_input};
 use crate::day_01::{solve_1_1, solve_1_2};
 use crate::day_02::{solve_2_1, solve_2_2};
 use crate::day_03::{solve_3_1, solve_3_2};
-use crate::day_04::solve_4_1;
+use crate::day_04::{solve_4_1, solve_4_2};
 
 mod aoc_lib;
 mod day_01;
@@ -32,7 +32,7 @@ fn main() {
         4 => {
             let raw_input = read_input(make_file_name(false, day, 1));
             println!("Day {} task {}: {}", day, 1, solve_4_1(&raw_input));
-            // println!("Day {} task {}: {}", day, 2, solve_4_2(&raw_input));
+            println!("Day {} task {}: {}", day, 2, solve_4_2(&raw_input));
         }
         _ => { panic!("Day is not solved yet") }
     }

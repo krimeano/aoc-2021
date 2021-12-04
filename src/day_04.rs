@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use crate::day_04::ReaderState::Card;
+
 const BINGO_SIZE: usize = 5;
 
 #[derive(Debug)]
@@ -119,6 +121,7 @@ pub fn solve_4_1(raw_input: &[String]) -> u32 {
         assert!(!called_barrels.contains_key(&barrel));
         // println!("BARREL: {}", barrel);
         called_barrels.insert(barrel, true);
+
         for card in &mut cards {
             if card.verify_number(barrel) {
                 let total = card.sum_unmarked();
@@ -130,6 +133,38 @@ pub fn solve_4_1(raw_input: &[String]) -> u32 {
     0
 }
 
+
+pub fn solve_4_2(raw_input: &[String]) -> u32 {
+    let (barrels, mut cards) = read_bingo_game(raw_input);
+
+    let mut called_barrels: HashMap<u32, bool> = HashMap::new();
+    let mut cards_in_game = Vec::new();
+    for card in &mut cards {
+        cards_in_game.push(card)
+    }
+    for barrel in barrels {
+        assert!(!called_barrels.contains_key(&barrel));
+        println!("BARREL: {}", barrel);
+        called_barrels.insert(barrel, true);
+
+        let mut losers = Vec::new();
+
+        for card in cards_in_game {
+            if !card.verify_number(barrel) {
+                losers.push(card);
+            }
+        }
+        println!("{} cards left", losers.len());
+
+        if losers.len() == 0 && cards_in_game.len() == 1 {
+            let total = cards_in_game[0].sum_unmarked();
+            return total * barrel;
+        }
+
+        cards_in_game = losers;
+    };
+    0
+}
 
 fn read_bingo_game(raw_input: &[String]) -> (Vec<u32>, Vec<BingoCard>) {
     let mut reader_state = ReaderState::Barrels;
@@ -182,6 +217,7 @@ mod tests {
     fn day_4() {
         let test_data = read_input(make_file_name(true, 4, 1));
         assert_eq!(solve_4_1(&test_data), 4512);
+        assert_eq!(solve_4_2(&test_data), 1924);
     }
 }
 
