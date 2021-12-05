@@ -1,0 +1,18 @@
+pub fn solve_{day}_1(raw_input: &[String]) -> u32 { 0 }
+
+pub fn solve_{day}_2(raw_input: &[String]) -> u32 { 0 }
+
+
+#[cfg(test)]
+mod tests {
+    use crate::{make_file_name, read_input};
+
+    use super::*;
+
+    #[test]
+    fn day_{day}() {
+        let test_data = read_input(make_file_name(true, {day}, 1));
+        assert_eq!(solve_{day}_1(&test_data), 0);
+        assert_eq!(solve_{day}_2(&test_data), 0);
+    }
+}
