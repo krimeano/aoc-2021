@@ -6,52 +6,22 @@ struct Point(u32, u32);
 #[derive(Debug)]
 struct Segment(Point, Point);
 
-pub fn solve_5_1(raw_input: &[String]) -> u32 {
+pub fn solve_5_1(raw_input: &[String]) -> u32 { solve_5(raw_input, true) }
+
+pub fn solve_5_2(raw_input: &[String]) -> u32 { solve_5(raw_input, false) }
+
+
+fn solve_5(raw_input: &[String], omit_diagonals: bool) -> u32 {
     let mut vents: HashMap<(u32, u32), u32> = HashMap::new();
     for line in raw_input {
         if line.len() == 0 {
             continue;
         }
         let segment = parse_line(line);
-
-        if segment.0.0 != segment.1.0 && segment.0.1 != segment.1.1 {
+        if omit_diagonals && segment.0.0 != segment.1.0 && segment.0.1 != segment.1.1 {
             // println!("omit segment {:?}", segment);
             continue;
         }
-        // println!("considering segment {:?}", segment);
-        let dx = if segment.0.0 < segment.1.0 { 1 } else { 0 };
-        let dy = if segment.0.1 < segment.1.1 { 1 } else { 0 };
-        assert!(dx + dy > 0);
-
-        let mut x = segment.0.0;
-        let mut y = segment.0.1;
-
-        while x <= segment.1.0 && y <= segment.1.1 {
-            let key = (x, y);
-            let z = match vents.get(&key) {
-                Some(z) => *z,
-                None => 0,
-            };
-            vents.insert(key, z + 1);
-            x += dx;
-            y += dy;
-        }
-    }
-    let mut out = 0;
-    for (_point, overlaps) in vents {
-        out += if overlaps >= 2 { 1 } else { 0 };
-    }
-    out
-}
-
-pub fn solve_5_2(raw_input: &[String]) -> u32 {
-    let mut vents: HashMap<(u32, u32), u32> = HashMap::new();
-    for line in raw_input {
-        if line.len() == 0 {
-            continue;
-        }
-        let segment = parse_line(line);
-
         let dx = if segment.0.0 == segment.1.0 { 0 } else { 1 };
         let dy = if segment.0.1 == segment.1.1 { 0 } else { 1 };
         let is_positive_y = segment.0.1 < segment.1.1;
