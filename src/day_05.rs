@@ -28,10 +28,11 @@ pub fn solve_5_1(raw_input: &[String]) -> u32 {
 
         while x <= segment.1.0 && y <= segment.1.1 {
             let key = (x, y);
-            match vents.get(&key) {
-                Some(z) => { vents.insert(key, z + 1) }
-                None => { vents.insert(key, 1) }
+            let z = match vents.get(&key) {
+                Some(z) => *z,
+                None => 0,
             };
+            vents.insert(key, z + 1);
             x += dx;
             y += dy;
         }
@@ -43,7 +44,40 @@ pub fn solve_5_1(raw_input: &[String]) -> u32 {
     out
 }
 
-pub fn solve_5_2(_raw_input: &[String]) -> u32 { 0 }
+pub fn solve_5_2(raw_input: &[String]) -> u32 {
+    let mut vents: HashMap<(u32, u32), u32> = HashMap::new();
+    for line in raw_input {
+        if line.len() == 0 {
+            continue;
+        }
+        let segment = parse_line(line);
+
+        let dx = if segment.0.0 == segment.1.0 { 0 } else { 1 };
+        let dy = if segment.0.1 == segment.1.1 { 0 } else { 1 };
+        let is_positive_y = segment.0.1 < segment.1.1;
+
+        assert!(dx + dy > 0);
+
+        let mut x = segment.0.0;
+        let mut y = segment.0.1;
+
+        while (dx > 0 && x <= segment.1.0) || (is_positive_y && y <= segment.1.1) {
+            let key = (x, y);
+            let z = match vents.get(&key) {
+                Some(z) => *z,
+                None => 0,
+            } + 1;
+            vents.insert(key, z);
+            x += dx;
+            y = if is_positive_y { y + dy } else if y > 0 { y - dy } else { y };
+        }
+    }
+    let mut out = 0;
+    for (_point, overlaps) in vents {
+        out += if overlaps >= 2 { 1 } else { 0 };
+    }
+    out
+}
 
 fn parse_line(line: &String) -> Segment {
     let mut pp: Vec<Vec<u32>> =
@@ -72,6 +106,6 @@ mod tests {
     fn day_5() {
         let test_data = read_input(make_file_name(true, 5, 1));
         assert_eq!(solve_5_1(&test_data), 5);
-        assert_eq!(solve_5_2(&test_data), 0);
+        assert_eq!(solve_5_2(&test_data), 12);
     }
 }
