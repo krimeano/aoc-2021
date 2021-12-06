@@ -13,22 +13,17 @@ fn simulate(raw_input: &[String], days: usize) -> u64 {
         timers[x as usize] += 1;
     }
     for _ in 0..days {
-        timers = [
-            timers[1],
-            timers[2],
-            timers[3],
-            timers[4],
-            timers[5],
-            timers[6],
-            timers[7] + timers[0],
-            timers[8],
-            timers[0]
-        ];
+        let newcomers = timers[0];
+        for ix in 0..8 {
+            timers[ix] = timers[ix + 1]
+        }
+        timers[6] += newcomers;
+        timers[8] = newcomers;
     }
     timers.iter().sum()
 }
 
-fn parse(line: &String) -> Vec<u64> {
+fn parse(line: &str) -> Vec<u64> {
     line.split(',')
         .map(|x| x.trim().parse().unwrap())
         .collect()
