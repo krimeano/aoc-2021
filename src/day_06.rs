@@ -1,3 +1,5 @@
+use crate::aoc_lib::csl_to_numbers;
+
 pub fn solve_6_1(raw_input: &[String]) -> u64 {
     simulate(raw_input, 80)
 }
@@ -7,7 +9,7 @@ pub fn solve_6_2(raw_input: &[String]) -> u64 {
 }
 
 fn simulate(raw_input: &[String], days: usize) -> u64 {
-    let school = parse(&raw_input[0]);
+    let school = csl_to_numbers(&raw_input[0]);
     let mut timers = [0; 9];
     for x in school {
         timers[x as usize] += 1;
@@ -21,12 +23,6 @@ fn simulate(raw_input: &[String], days: usize) -> u64 {
         timers[8] = newcomers;
     }
     timers.iter().sum()
-}
-
-fn parse(line: &str) -> Vec<u64> {
-    line.split(',')
-        .map(|x| x.trim().parse().unwrap())
-        .collect()
 }
 
 

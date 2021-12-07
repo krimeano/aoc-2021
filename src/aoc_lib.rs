@@ -54,6 +54,12 @@ pub fn bin_str_to_number(bin: &str) -> u32 {
     out
 }
 
+pub fn csl_to_numbers(line: &str) -> Vec<u32> {
+    line.split(',')
+        .map(|x| x.trim().parse().unwrap())
+        .collect()
+}
+
 
 pub fn find_not_less_than(sorted_haystack: &[u32], needle: u32) -> usize {
     let size = sorted_haystack.len();
