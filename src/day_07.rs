@@ -35,7 +35,6 @@ fn calculate_fuel(pivot: u32, swarm: &[u32]) -> u32 {
         let diff = if *x > pivot { (x - pivot) * (x - pivot + 1) } else { (pivot - x) * (pivot - x + 1) } / 2;
         total += diff;
     }
-    println!("total {}", total);
     total
 }
 
