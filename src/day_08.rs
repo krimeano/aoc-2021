@@ -3,17 +3,27 @@ pub fn solve_8_1(raw_input: &[String]) -> u32 {
     for line in raw_input {
         if line.len() == 0 { continue; }
 
-        let data: Vec<Vec<String>> = line.split('|')
-            .map(|x| x.trim().split(' ')
-                .filter(|y| y.len() > 0)
-                .map(|y| String::from(y))
-                .collect()
-            )
-            .collect();
-        for x in &data[1] {
-            if x.len() < 5 || x.len() > 6 {
-                total += 1;
+        let mut is_after_pipe = false;
+        let mut counter: usize = 0;
+        for x in line.chars() {
+            total += match x {
+                '|' => {
+                    is_after_pipe = true;
+                    0
+                }
+                ' ' => {
+                    let inc = if is_after_pipe && is_1478(counter) { 1 } else { 0 };
+                    counter = 0;
+                    inc
+                }
+                _ => {
+                    counter += if is_after_pipe { 1 } else { 0 };
+                    0
+                }
             }
+        }
+        if is_1478(counter) {
+            total += 1;
         }
     }
     total
@@ -21,6 +31,7 @@ pub fn solve_8_1(raw_input: &[String]) -> u32 {
 
 pub fn solve_8_2(raw_input: &[String]) -> u32 { 0 }
 
+fn is_1478(n: usize) -> bool { n > 1 && n != 5 && n != 6 }
 
 #[cfg(test)]
 mod tests {
