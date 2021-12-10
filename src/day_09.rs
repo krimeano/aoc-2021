@@ -134,6 +134,6 @@ mod tests {
     fn day_9() {
         let test_data = read_input(make_file_name(true, 9, 1));
         assert_eq!(solve_9_1(&test_data), 15);
-        assert_eq!(solve_9_2(&test_data, true), 1134);
+        assert_eq!(solve_9_2(&test_data, false), 1134);
     }
 }
