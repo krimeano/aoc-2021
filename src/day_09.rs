@@ -29,12 +29,11 @@ pub fn solve_9_2(raw_input: &[String], is_verbose: bool) -> usize {
             basin_sizes.pop();
         }
     }
-
-    let mut out = 1;
-    for x in basin_sizes {
-        out *= x;
+    if let Some(out) = basin_sizes.into_iter().reduce(|a, b| a * b) {
+        out
+    } else {
+        0
     }
-    out
 }
 
 fn find_heatmap(raw_input: &[String]) -> Vec<Vec<u32>> {
