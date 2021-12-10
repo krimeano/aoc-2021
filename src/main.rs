@@ -67,7 +67,7 @@ fn main() {
         9 => {
             let raw_input = read_input(make_file_name(false, day, 1));
             println!("Day {} task {}: {}", day, 1, solve_9_1(&raw_input));
-            println!("Day {} task {}: {}", day, 2, solve_9_2(&raw_input));
+            println!("Day {} task {}: {}", day, 2, solve_9_2(&raw_input, false));
         }
         _ => { panic!("Day is not solved yet") }
     }

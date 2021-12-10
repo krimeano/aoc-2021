@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::{HashMap};
 
 //   a 64 a
 // b        c
@@ -79,11 +79,11 @@ pub fn solve_8_1(raw_input: &[String]) -> u32 {
 }
 
 pub fn solve_8_2(raw_input: &[String]) -> u32 {
-    let mut total = 0;
+    let mut _total = 0;
     println!("numbers {:?}", DISPLAY_NUMBER);
     for line in raw_input {
         if line.len() == 0 { continue; }
-        total += solve_line(line);
+        _total += solve_line(line);
     }
     0
 }
@@ -97,7 +97,7 @@ fn solve_line(line: &str) -> u32 {
         .map(|x| String::from(x))
         .collect();
     signals.sort_by(|a, b| a.len().partial_cmp(&b.len()).unwrap());
-    let map = map_signals(&signals);
+    let _map = map_signals(&signals);
     0
 }
 
@@ -107,7 +107,7 @@ fn map_signals(signals: &[String]) -> HashMap<char, char> {
     let pr_allowed = HashMap::from(PR_ALLOWED);
     let ab_allowed = HashMap::from(AB_ALLOWED);
     let mut left = HashMap::from(SIGNAL_CHARS.map(|x| (x, S_Z )));
-    let mut right = HashMap::from(SIGNAL_CHARS.map(|x| (x, S_Z )));
+    let mut _right = HashMap::from(SIGNAL_CHARS.map(|x| (x, S_Z )));
     for signal in signals {
         let n = signal.len();
         for c in SIGNAL_CHARS {
