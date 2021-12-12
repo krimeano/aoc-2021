@@ -60,6 +60,47 @@ pub fn csl_to_numbers(line: &str) -> Vec<u32> {
         .collect()
 }
 
+pub fn get_neighbors(
+    (ix, jy): (usize, usize),
+    (h, w): (usize, usize),
+    orthogonal_only: bool,
+) -> Vec<(usize, usize)> {
+    let mut out = Vec::new();
+
+    if ix > 0 {
+        out.push((ix - 1, jy));
+    }
+
+    if ix + 1 < h {
+        out.push((ix + 1, jy));
+    }
+
+    if jy > 0 {
+        out.push((ix, jy - 1));
+        if !orthogonal_only {
+            if ix > 0 {
+                out.push((ix - 1, jy - 1));
+            }
+            if ix + 1 < h {
+                out.push((ix + 1, jy - 1));
+            }
+        }
+    }
+
+    if jy + 1 < w {
+        out.push((ix, jy + 1));
+        if !orthogonal_only {
+            if ix > 0 {
+                out.push((ix - 1, jy + 1));
+            }
+            if ix + 1 < h {
+                out.push((ix + 1, jy + 1));
+            }
+        }
+    }
+
+    out
+}
 
 pub fn find_not_less_than(sorted_haystack: &[u32], needle: u32) -> usize {
     let size = sorted_haystack.len();
