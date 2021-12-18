@@ -32,14 +32,20 @@ pub fn bin_str_to_number(bin: &str) -> u32 {
     if bin.len() == 0 {
         panic!("empty string!");
     }
-    const MAX_SIZE: usize = 32;
+    bin_str_to_number_128(bin, 32) as u32
+}
+
+pub fn bin_str_to_number_128(bin: &str, max_size: usize) -> u128 {
+    if bin.len() == 0 {
+        panic!("empty string!");
+    }
     let mut out = 0;
     let mut counter = 0;
 
     for x in bin.chars() {
         counter += 1;
 
-        if counter > MAX_SIZE {
+        if counter > max_size {
             panic!("too large string!");
         }
 

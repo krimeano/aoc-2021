@@ -75,6 +75,11 @@ fn dijkstra(input: Vec<Vec<u32>>) -> u32 {
                 cur = (*ix, *jy);
             }
         }
+
+        if cur == (h - 1, w - 1) {
+            return value;
+        }
+
         // println!("selected {:?} = {} of {:?}", cur, value, visited);
 
         visited.remove(&cur);
