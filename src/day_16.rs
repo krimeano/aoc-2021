@@ -1,5 +1,19 @@
 use crate::aoc_lib::{bin_str_to_number, bin_str_to_number_128};
 
+pub fn solve_16_1(raw_input: &[String]) -> u32 {
+    let input = to_binary(&raw_input[0]);
+    let packet = Packet::from(&input);
+
+    packet.collect_versions()
+}
+
+
+pub fn solve_16_2(raw_input: &[String]) -> u64 {
+    let input = to_binary(&raw_input[0]);
+    let packet = Packet::from(&input);
+    packet.calculate()
+}
+
 const TYPE_ID_LITERAL: u8 = 4;
 const META_BITS: usize = 15;
 const META_COUNT: usize = 11;
@@ -19,11 +33,7 @@ struct Packet {
 
 impl Packet {
     pub fn from(raw: &str) -> Self {
-        println!();
-        println!("PACKET");
-        println!("raw: {}", raw);
         let header = Header::from(raw);
-        println!("header: {:?}", &header);
         let content = raw[header.start_at..].to_string();
 
         let mut out = Self {
@@ -46,7 +56,6 @@ impl Packet {
     }
 
     fn parse_literal(&mut self) {
-        println!("parsing literal from {}, size = {}", self.content, self.content.len());
         let mut str_value = String::new();
         let mut cur_pos = 0;
         let mut next_pos = cur_pos + LITERAL_ITEM_SIZE;
@@ -54,7 +63,6 @@ impl Packet {
 
         while !is_last_chunk && next_pos <= self.content.len() {
             let chunk = &self.content[cur_pos..next_pos];
-            println!("\tchunk = {}", chunk);
             if let Some(c) = chunk.chars().nth(0) {
                 is_last_chunk = c == '0';
             }
@@ -62,8 +70,6 @@ impl Packet {
             cur_pos += LITERAL_ITEM_SIZE;
             next_pos += LITERAL_ITEM_SIZE;
         }
-        println!("str_value {}", &str_value);
-        println!("cur_pos {}", &cur_pos);
         self.value = Some(bin_str_to_number_128(&str_value, 64) as u64);
 
         if cur_pos < self.content.len() {
@@ -72,7 +78,6 @@ impl Packet {
     }
 
     fn parse_subpackets_by_count(&mut self) {
-        println!("parsing sub packets by count from {} whith {:?}", self.content, self.header);
         let mut subpackets = Vec::new();
         let mut total_read = 0;
         let mut remainder = self.content.clone();
@@ -90,7 +95,6 @@ impl Packet {
     }
 
     fn parse_subpackets_by_length(&mut self) {
-        println!("parsing sub packets by size from {} whith {:?}", self.content, self.header);
         let mut subpackets = Vec::new();
         let mut total_read_length = 0;
         let mut remainder = self.content.clone();
@@ -112,6 +116,25 @@ impl Packet {
             subs.iter().map(|x| x.collect_versions()).sum()
         } else {
             0
+        }
+    }
+
+    pub fn calculate(&self) -> u64 {
+        if let Some(subs) = &self.subpackets {
+            match self.header.type_id {
+                0 => subs.iter().map(|x| x.calculate()).sum(),
+                1 => subs.iter().map(|x| x.calculate()).product(),
+                2 => if let Some(out) = subs.iter().map(|x| x.calculate()).min() { out } else { u64::MAX }
+                3 => if let Some(out) = subs.iter().map(|x| x.calculate()).max() { out } else { u64::MIN }
+                5 => if subs[0].calculate() > subs[1].calculate() { 1 } else { 0 }
+                6 => if subs[0].calculate() < subs[1].calculate() { 1 } else { 0 }
+                7 => if subs[0].calculate() == subs[1].calculate() { 1 } else { 0 }
+                _ => {
+                    panic!("not implemented yet for type_id = {}", self.header.type_id)
+                }
+            }
+        } else {
+            self.value.unwrap()
         }
     }
 }
@@ -154,18 +177,6 @@ impl Header {
         };
     }
 }
-
-
-pub fn solve_16_1(raw_input: &[String]) -> u32 {
-    let input = to_binary(&raw_input[0]);
-    println!("{:?}", input);
-    let packet = Packet::from(&input);
-
-    packet.collect_versions()
-}
-
-
-pub fn solve_16_2(_raw_input: &[String]) -> u32 { 0 }
 
 fn to_binary(line: &str) -> String {
     let mut out = String::new();
@@ -241,14 +252,22 @@ mod tests {
 
     #[test]
     fn day_16() {
-        println!();
-        println!();
         let test_data = read_input(make_file_name(true, 16, 1));
 
         assert_eq!(solve_16_1(&test_data[0..1].to_vec()), 16);
         assert_eq!(solve_16_1(&test_data[1..2].to_vec()), 12);
         assert_eq!(solve_16_1(&test_data[2..3].to_vec()), 23);
         assert_eq!(solve_16_1(&test_data[3..4].to_vec()), 31);
-        assert_eq!(solve_16_2(&test_data), 0);
+
+
+        let test_data = read_input(make_file_name(true, 16, 2));
+        assert_eq!(solve_16_2(&test_data[0..1].to_vec()), 3);
+        assert_eq!(solve_16_2(&test_data[1..2].to_vec()), 54);
+        assert_eq!(solve_16_2(&test_data[2..3].to_vec()), 7);
+        assert_eq!(solve_16_2(&test_data[3..4].to_vec()), 9);
+        assert_eq!(solve_16_2(&test_data[4..5].to_vec()), 1);
+        assert_eq!(solve_16_2(&test_data[5..6].to_vec()), 0);
+        assert_eq!(solve_16_2(&test_data[6..7].to_vec()), 0);
+        assert_eq!(solve_16_2(&test_data[7..8].to_vec()), 1);
     }
 }
