@@ -16,6 +16,7 @@ use crate::day_14::{solve_14_1, solve_14_2};
 use crate::day_15::{solve_15_1, solve_15_2};
 use crate::day_16::{solve_16_1, solve_16_2};
 use crate::day_17::{solve_17_1, solve_17_2};
+use crate::day_18::{solve_18_1, solve_18_2};
 
 mod aoc_lib;
 mod day_01;
@@ -35,10 +36,11 @@ mod day_14;
 mod day_15;
 mod day_16;
 mod day_17;
+mod day_18;
 
 
 fn main() {
-    let day = 17;
+    let day = 18;
     match day {
         1 => {
             let raw_input = read_input(make_file_name(false, day, 1));
@@ -124,6 +126,11 @@ fn main() {
             let raw_input = read_input(make_file_name(false, day, 1));
             println!("Day {} task {}: {}", day, 1, solve_17_1(&raw_input));
             println!("Day {} task {}: {}", day, 2, solve_17_2(&raw_input));
+        }
+        18 => {
+            let raw_input = read_input(make_file_name(false, day, 1));
+            println!("Day {} task {}: {}", day, 1, solve_18_1(&raw_input));
+            println!("Day {} task {}: {}", day, 2, solve_18_2(&raw_input));
         }
         _ => { panic!("Day is not solved yet") }
     }
