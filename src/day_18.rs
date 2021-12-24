@@ -1,11 +1,33 @@
+use std::cmp::max;
 use std::fmt;
 
-pub fn solve_18_1(raw_input: &[String]) -> u64 {
+pub fn solve_18_1(raw_input: &[String]) -> u32 {
     find_sum(raw_input).magnutude()
 }
 
-pub fn solve_18_2(_raw_input: &[String]) -> u32 { 0 }
-
+pub fn solve_18_2(raw_input: &[String]) -> u32 {
+    let mut fishes = Vec::new();
+    for line in raw_input {
+        if line.len() == 0 {
+            continue;
+        }
+        fishes.push(SnailFish::from(line));
+    }
+    let mut out = 0;
+    let size = fishes.len();
+    for ix in 0..size - 1 {
+        for jy in ix + 1..size {
+            out = max(
+                out,
+                max(
+                    fishes[ix].clone().add(fishes[jy].clone()).reduce().magnutude(),
+                    fishes[jy].clone().add(fishes[ix].clone()).reduce().magnutude(),
+                ),
+            )
+        }
+    }
+    out
+}
 
 fn find_sum(raw_input: &[String]) -> SnailFish {
     let mut sum = SnailFish::N(0);
@@ -21,7 +43,7 @@ fn find_sum(raw_input: &[String]) -> SnailFish {
 
 #[derive(Clone)]
 enum SnailFish {
-    N(u64),
+    N(u32),
     S(Box<Self>, Box<Self>),
 }
 
@@ -103,7 +125,7 @@ impl SnailFish {
         }
     }
 
-    pub fn split(self) -> (Self, Option<u64>) {
+    pub fn split(self) -> (Self, Option<u32>) {
         match self {
             Self::N(x) => match x < 10 {
                 true => (Self::N(x), None),
@@ -137,7 +159,7 @@ impl SnailFish {
         }
     }
 
-    pub fn magnutude(&self) -> u64 {
+    pub fn magnutude(&self) -> u32 {
         match self {
             Self::N(x) => *x,
             Self::S(a, b) => 3 * a.magnutude() + 2 * b.magnutude()
@@ -198,6 +220,6 @@ mod tests {
         assert_eq!(SnailFish::from("[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]").magnutude(), 3488);
 
         assert_eq!(solve_18_1(&test_data), 4140);
-        assert_eq!(solve_18_2(&test_data), 0);
+        assert_eq!(solve_18_2(&test_data), 3993);
     }
 }
