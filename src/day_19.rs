@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::{HashMap};
 use std::fmt;
 
 pub fn solve_19_1(raw_input: &[String]) -> u32 {
@@ -105,9 +105,9 @@ impl Vector {
         }
     }
 
-    pub fn neg(&self) -> Self {
-        Self::new(&self.end, &self.beg)
-    }
+    // pub fn neg(&self) -> Self {
+    //     Self::new(&self.end, &self.beg)
+    // }
 
     pub fn val(&self) -> Dot {
         self.end.rem(&self.beg)
@@ -151,7 +151,7 @@ mod tests {
     #[test]
     fn day_19() {
         let test_data = read_input(make_file_name(true, 19, 1));
-        let test_data_2 = read_input(make_file_name(true, 19, 2));
+        // let test_data_2 = read_input(make_file_name(true, 19, 2));
         // assert_eq!(solve_19_1(&test_data), 12);
         // assert_eq!(solve_19_1(&test_data_2), 79);
         assert_eq!(solve_19_2(&test_data), 0);
