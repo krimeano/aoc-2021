@@ -48,7 +48,7 @@ mod day_22;
 
 
 fn main() {
-    let day = 22;
+    let day = 21;
     match day {
         1 => {
             let raw_input = read_input(make_file_name(false, day, 1));
