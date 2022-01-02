@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 const DIE_MAX: u8 = 100;
 const TRACK_LENGTH: u8 = 10;
 const ROLL: u32 = 3;
@@ -11,28 +13,26 @@ pub fn solve_21_1(input: [u8; 2]) -> u32 {
 
     while score[player_ix] < TARGET {
         player_ix = 1 - player_ix;
-        print!("Player {}: ", player_ix + 1);
         positions[player_ix] = turn(positions[player_ix], &mut die);
         score[player_ix] += positions[player_ix] as u32;
-        println!("{:?} {:?}", positions, score);
     }
     let loser_ix = 1 - player_ix;
-    println!("Player {} has score {}, and die rolled {} times", loser_ix + 1, score[loser_ix], die.rolled);
     score[loser_ix] * die.rolled
 }
 
-pub fn solve_21_2(_input: [u8; 2]) -> u32 { 0 }
+pub fn solve_21_2(_input: [u8; 2]) -> u64 {
+    let dirac = get_dirac_die_outcomes();
+    println!("{:?}", dirac);
+    0
+}
 
 fn turn(from_pos: u8, die: &mut Die) -> u8 {
     let mut steps = 0;
-    print!("roll ");
     for _ in 0..ROLL {
         if let Some(x) = die.next() {
-            print!("{} ", x);
             steps = (steps + x) % TRACK_LENGTH;
         }
     }
-    print!("= {} ", steps);
     (from_pos - 1 + steps) % TRACK_LENGTH + 1
 }
 
@@ -55,6 +55,19 @@ impl Iterator for Die {
     }
 }
 
+fn get_dirac_die_outcomes() -> HashMap<u8, u64> {
+    let mut out = HashMap::new();
+    for ix in 0..3 {
+        for jy in 0..3 {
+            for kz in 0..3 {
+                let a = 3 + ix + jy + kz;
+                *out.entry(a).or_insert(0) += 1;
+            }
+        }
+    }
+    out
+}
+
 
 #[cfg(test)]
 mod tests {
@@ -63,6 +76,6 @@ mod tests {
     #[test]
     fn day_21() {
         assert_eq!(solve_21_1([4, 8]), 739785);
-        assert_eq!(solve_21_2([4, 8]), 0);
+        assert_eq!(solve_21_2([4, 8]), 444356092776315);
     }
 }
